@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+message LoomDiceCreateAccountTx {
+	int32 version = 1;
+	string owner = 2;
+	bytes data = 3;
+}
+
+message LoomDiceRoll {
+	bytes owner = 1;
+	int32 amount = 2;
+}
+
+message LoomDiceRollResult {
+    int32 result = 1;
+}
+
+message LoomDiceAmountQueryParams {
+	string owner = 1;
+}
+
+message LoomDiceAmountQueryResult {
+	int32 amount = 1;
+}
