@@ -15,18 +15,18 @@ type DiceContract struct {
 }
 
 type UserState struct {
-	chipCount int32
-	winCount  int32
-	loseCount int32
-	history   []int
+	ChipCount int32 `json:"chips"`
+	WinCount  int32 `json:"win"`
+	LoseCount int32 `json:"lose"`
+	History   []int `json:"history"`
 }
 
 func NewUserState() UserState {
 	return UserState{
-		chipCount: 0,
-		winCount:  0,
-		loseCount: 0,
-		history:   make([]int, 0),
+		ChipCount: 0,
+		WinCount:  0,
+		LoseCount: 0,
+		History:   make([]int, 0),
 	}
 }
 
@@ -52,7 +52,9 @@ func (e *DiceContract) CreateAccount(ctx contract.Context, accTx *txmsg.LDCreate
 	}
 	addr := []byte(ctx.Message().Sender.Local)
 
-	initState, err := json.Marshal(NewUserState())
+	st := NewUserState()
+	ctx.Logger().Info("Before marshal", "state", st)
+	initState, err := json.Marshal(st)
 	if err != nil {
 		return errors.Wrap(err, "Error marshalling state")
 	}
@@ -81,7 +83,7 @@ func (e *DiceContract) CreateAccount(ctx contract.Context, accTx *txmsg.LDCreate
 }
 
 func (e *DiceContract) GetState(ctx contract.StaticContext, params *txmsg.LDStateQueryParams) (*txmsg.LDStateQueryResult, error) {
-	ctx.Logger().Info("Get State Owner: ", params.Owner)
+	ctx.Logger().Info("Get State", "owner", params.Owner)
 	if ctx.Has(e.ownerKey(params.Owner)) {
 		var curState txmsg.LDAppState
 		if err := ctx.Get(e.ownerKey(params.Owner), &curState); err != nil {
