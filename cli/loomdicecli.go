@@ -115,7 +115,7 @@ func main() {
 
 	rollCmd.Flags().StringVarP(&privFile, "key", "k", "", "private key file")
 	rollCmd.Flags().StringVarP(&user, "user", "u", "loom", "user")
-	rollCmd.Flags().BoolVarP(&betBig, "big", "b", false, "bet big or not")
+	rollCmd.Flags().BoolVarP(&betBig, "big", "b", true, "bet big or not")
 	rollCmd.Flags().Int32VarP(&betAmount, "amount", "a", 0, "bet amount")
 
 	getChipCmd := &cobra.Command{
