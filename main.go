@@ -116,7 +116,7 @@ func (dc *DiceContract) GetChipCount(ctx contract.StaticContext, params *txmsg.L
 
 func (dc *DiceContract) Roll(ctx contract.Context, params *txmsg.LDRollQueryParams) (*txmsg.LDRollQueryResult, error) {
 	owner := strings.TrimSpace(params.Owner)
-	ctx.Logger().Info("Get State", "owner", owner)
+	ctx.Logger().Info("Roll Params", "owner", owner, "betBig", params.BetBig, "amount", params.Amount)
 	if ctx.Has(dc.ownerKey(owner)) {
 		var curState txmsg.LDAppState
 		if err := ctx.Get(dc.ownerKey(owner), &curState); err != nil {

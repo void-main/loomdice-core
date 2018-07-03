@@ -102,6 +102,8 @@ func main() {
 				BetBig: betBig,
 				Amount: betAmount,
 			}
+
+			fmt.Println(params)
 			signer := auth.NewEd25519Signer(privKey)
 			if _, err := contract.Call("Roll", params, signer, &result); err != nil {
 				return err
