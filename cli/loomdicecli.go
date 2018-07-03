@@ -22,7 +22,7 @@ func getPrivKey(privKeyFile string) ([]byte, error) {
 
 func main() {
 	var privFile, user string
-	var value int
+	//var value int
 	//var value int
 
 	rpcClient := client.NewDAppChainRPCClient("default", writeURI, readURI)
@@ -104,8 +104,8 @@ func main() {
 	keygenCmd.Flags().StringVarP(&privFile, "key", "k", "", "private key file")
 
 	rootCmd := &cobra.Command{
-		Use:   "etherboycli",
-		Short: "Etherboy cli tool",
+		Use:   "loomdicecli",
+		Short: "LoomDice cli tool",
 	}
 	rootCmd.AddCommand(keygenCmd)
 	rootCmd.AddCommand(createAccCmd)
