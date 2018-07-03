@@ -137,7 +137,7 @@ func main() {
 			if _, err := contract.StaticCall("GetChipCount", params, callerAddr, &result); err != nil {
 				return err
 			}
-			fmt.Println(string(result.Amount))
+			fmt.Println(result.Amount)
 			return nil
 		},
 	}

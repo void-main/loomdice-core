@@ -153,7 +153,7 @@ func (dc *DiceContract) Roll(ctx contract.Context, params *txmsg.LDRollQueryPara
 		} else { // sorry, you lose
 			// setup result
 			result.Point = int32(number)
-			result.Win = true
+			result.Win = false
 			result.Amount = state.ChipCount - params.Amount
 
 			// update state
