@@ -12,10 +12,10 @@ It has these top-level messages:
 	LDAppState
 	LDStateQueryParams
 	LDStateQueryResult
-	LDRoll
-	LDRollResult
-	LDAmountQueryParams
-	LDAmountQueryResult
+	LDRollQueryParams
+	LDRollQueryResult
+	LDChipQueryParams
+	LDChipQueryResult
 */
 package txmsg
 
@@ -51,21 +51,13 @@ func (m *LDCreateAccountTx) GetOwner() string {
 }
 
 type LDAppState struct {
-	Address []byte `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
-	State   []byte `protobuf:"bytes,2,opt,name=state,proto3" json:"state,omitempty"`
+	State []byte `protobuf:"bytes,1,opt,name=state,proto3" json:"state,omitempty"`
 }
 
 func (m *LDAppState) Reset()                    { *m = LDAppState{} }
 func (m *LDAppState) String() string            { return proto.CompactTextString(m) }
 func (*LDAppState) ProtoMessage()               {}
 func (*LDAppState) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{1} }
-
-func (m *LDAppState) GetAddress() []byte {
-	if m != nil {
-		return m.Address
-	}
-	return nil
-}
 
 func (m *LDAppState) GetState() []byte {
 	if m != nil {
@@ -106,80 +98,96 @@ func (m *LDStateQueryResult) GetState() []byte {
 	return nil
 }
 
-type LDRoll struct {
-	Player []byte `protobuf:"bytes,1,opt,name=player,proto3" json:"player,omitempty"`
-	Amount int32  `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
+type LDRollQueryParams struct {
+	Owner  string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+	BetBig bool   `protobuf:"varint,2,opt,name=betBig,proto3" json:"betBig,omitempty"`
+	Amount int32  `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
-func (m *LDRoll) Reset()                    { *m = LDRoll{} }
-func (m *LDRoll) String() string            { return proto.CompactTextString(m) }
-func (*LDRoll) ProtoMessage()               {}
-func (*LDRoll) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{4} }
+func (m *LDRollQueryParams) Reset()                    { *m = LDRollQueryParams{} }
+func (m *LDRollQueryParams) String() string            { return proto.CompactTextString(m) }
+func (*LDRollQueryParams) ProtoMessage()               {}
+func (*LDRollQueryParams) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{4} }
 
-func (m *LDRoll) GetPlayer() []byte {
+func (m *LDRollQueryParams) GetOwner() string {
 	if m != nil {
-		return m.Player
+		return m.Owner
 	}
-	return nil
+	return ""
 }
 
-func (m *LDRoll) GetAmount() int32 {
+func (m *LDRollQueryParams) GetBetBig() bool {
 	if m != nil {
-		return m.Amount
+		return m.BetBig
 	}
-	return 0
+	return false
 }
 
-type LDRollResult struct {
-	Result int32 `protobuf:"varint,1,opt,name=result,proto3" json:"result,omitempty"`
-	Amount int32 `protobuf:"varint,2,opt,name=amount,proto3" json:"amount,omitempty"`
-}
-
-func (m *LDRollResult) Reset()                    { *m = LDRollResult{} }
-func (m *LDRollResult) String() string            { return proto.CompactTextString(m) }
-func (*LDRollResult) ProtoMessage()               {}
-func (*LDRollResult) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{5} }
-
-func (m *LDRollResult) GetResult() int32 {
-	if m != nil {
-		return m.Result
-	}
-	return 0
-}
-
-func (m *LDRollResult) GetAmount() int32 {
+func (m *LDRollQueryParams) GetAmount() int32 {
 	if m != nil {
 		return m.Amount
 	}
 	return 0
 }
 
-type LDAmountQueryParams struct {
-	Player []byte `protobuf:"bytes,1,opt,name=player,proto3" json:"player,omitempty"`
+type LDRollQueryResult struct {
+	Point  int32 `protobuf:"varint,1,opt,name=point,proto3" json:"point,omitempty"`
+	Win    bool  `protobuf:"varint,2,opt,name=win,proto3" json:"win,omitempty"`
+	Amount int32 `protobuf:"varint,3,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
-func (m *LDAmountQueryParams) Reset()                    { *m = LDAmountQueryParams{} }
-func (m *LDAmountQueryParams) String() string            { return proto.CompactTextString(m) }
-func (*LDAmountQueryParams) ProtoMessage()               {}
-func (*LDAmountQueryParams) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{6} }
+func (m *LDRollQueryResult) Reset()                    { *m = LDRollQueryResult{} }
+func (m *LDRollQueryResult) String() string            { return proto.CompactTextString(m) }
+func (*LDRollQueryResult) ProtoMessage()               {}
+func (*LDRollQueryResult) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{5} }
 
-func (m *LDAmountQueryParams) GetPlayer() []byte {
+func (m *LDRollQueryResult) GetPoint() int32 {
 	if m != nil {
-		return m.Player
+		return m.Point
 	}
-	return nil
+	return 0
 }
 
-type LDAmountQueryResult struct {
+func (m *LDRollQueryResult) GetWin() bool {
+	if m != nil {
+		return m.Win
+	}
+	return false
+}
+
+func (m *LDRollQueryResult) GetAmount() int32 {
+	if m != nil {
+		return m.Amount
+	}
+	return 0
+}
+
+type LDChipQueryParams struct {
+	Owner string `protobuf:"bytes,1,opt,name=owner,proto3" json:"owner,omitempty"`
+}
+
+func (m *LDChipQueryParams) Reset()                    { *m = LDChipQueryParams{} }
+func (m *LDChipQueryParams) String() string            { return proto.CompactTextString(m) }
+func (*LDChipQueryParams) ProtoMessage()               {}
+func (*LDChipQueryParams) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{6} }
+
+func (m *LDChipQueryParams) GetOwner() string {
+	if m != nil {
+		return m.Owner
+	}
+	return ""
+}
+
+type LDChipQueryResult struct {
 	Amount int32 `protobuf:"varint,1,opt,name=amount,proto3" json:"amount,omitempty"`
 }
 
-func (m *LDAmountQueryResult) Reset()                    { *m = LDAmountQueryResult{} }
-func (m *LDAmountQueryResult) String() string            { return proto.CompactTextString(m) }
-func (*LDAmountQueryResult) ProtoMessage()               {}
-func (*LDAmountQueryResult) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{7} }
+func (m *LDChipQueryResult) Reset()                    { *m = LDChipQueryResult{} }
+func (m *LDChipQueryResult) String() string            { return proto.CompactTextString(m) }
+func (*LDChipQueryResult) ProtoMessage()               {}
+func (*LDChipQueryResult) Descriptor() ([]byte, []int) { return fileDescriptorTxmsg, []int{7} }
 
-func (m *LDAmountQueryResult) GetAmount() int32 {
+func (m *LDChipQueryResult) GetAmount() int32 {
 	if m != nil {
 		return m.Amount
 	}
@@ -191,29 +199,29 @@ func init() {
 	proto.RegisterType((*LDAppState)(nil), "LDAppState")
 	proto.RegisterType((*LDStateQueryParams)(nil), "LDStateQueryParams")
 	proto.RegisterType((*LDStateQueryResult)(nil), "LDStateQueryResult")
-	proto.RegisterType((*LDRoll)(nil), "LDRoll")
-	proto.RegisterType((*LDRollResult)(nil), "LDRollResult")
-	proto.RegisterType((*LDAmountQueryParams)(nil), "LDAmountQueryParams")
-	proto.RegisterType((*LDAmountQueryResult)(nil), "LDAmountQueryResult")
+	proto.RegisterType((*LDRollQueryParams)(nil), "LDRollQueryParams")
+	proto.RegisterType((*LDRollQueryResult)(nil), "LDRollQueryResult")
+	proto.RegisterType((*LDChipQueryParams)(nil), "LDChipQueryParams")
+	proto.RegisterType((*LDChipQueryResult)(nil), "LDChipQueryResult")
 }
 
 func init() { proto.RegisterFile("txmsg.proto", fileDescriptorTxmsg) }
 
 var fileDescriptorTxmsg = []byte{
-	// 231 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x74, 0x91, 0xc1, 0x4a, 0xc4, 0x30,
-	0x10, 0x86, 0x89, 0xd0, 0x88, 0x63, 0x2f, 0x46, 0x59, 0x7a, 0x94, 0x9c, 0x54, 0xd0, 0x8b, 0x17,
-	0x0f, 0x22, 0x14, 0x73, 0xcc, 0x41, 0x47, 0x5f, 0x20, 0xee, 0x06, 0x2f, 0xe9, 0x26, 0x24, 0x29,
-	0xee, 0xbe, 0xbd, 0x64, 0x1a, 0xb1, 0xec, 0xd2, 0x5b, 0xbe, 0xe1, 0xff, 0xbf, 0xce, 0x50, 0x38,
-	0xcf, 0xbb, 0x21, 0x7d, 0x3f, 0x84, 0xe8, 0xb3, 0x97, 0xb7, 0x70, 0xa1, 0xd5, 0x6b, 0xb4, 0x26,
-	0xdb, 0x7e, 0xbd, 0xf6, 0xe3, 0x36, 0x7f, 0xee, 0xc4, 0x15, 0x34, 0xfe, 0x67, 0x6b, 0x63, 0xc7,
-	0xae, 0xd9, 0xcd, 0x19, 0x4e, 0x20, 0x9f, 0x01, 0xb4, 0xea, 0x43, 0xf8, 0xc8, 0x26, 0x5b, 0xd1,
-	0xc1, 0xa9, 0xd9, 0x6c, 0xa2, 0x4d, 0x89, 0x52, 0x2d, 0xfe, 0x61, 0x69, 0xa7, 0x12, 0xe9, 0x4e,
-	0x68, 0x3e, 0x81, 0xbc, 0x03, 0xa1, 0x15, 0x55, 0xdf, 0x47, 0x1b, 0xf7, 0x6f, 0x26, 0x9a, 0x21,
-	0x2d, 0x7c, 0xe9, 0x20, 0x8b, 0x36, 0x8d, 0x2e, 0xff, 0x7b, 0xd9, 0xdc, 0xfb, 0x04, 0x5c, 0x2b,
-	0xf4, 0xce, 0x89, 0x15, 0xf0, 0xe0, 0xcc, 0xbe, 0xca, 0x5a, 0xac, 0x54, 0xe6, 0x66, 0x28, 0x97,
-	0xd1, 0x42, 0x0d, 0x56, 0x92, 0x2f, 0xd0, 0x4e, 0xcd, 0xea, 0x5f, 0x01, 0x8f, 0xf4, 0xa2, 0x7e,
-	0x83, 0x95, 0x16, 0xfb, 0xf7, 0x70, 0xa9, 0x55, 0x4f, 0xef, 0xf9, 0x49, 0x0b, 0x6b, 0x1c, 0xc5,
-	0xf1, 0xd0, 0xce, 0xe6, 0xf6, 0x2f, 0x4e, 0xff, 0xe7, 0xf1, 0x37, 0x00, 0x00, 0xff, 0xff, 0xad,
-	0x2d, 0xcf, 0x57, 0xae, 0x01, 0x00, 0x00,
+	// 230 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x91, 0x4d, 0x4b, 0xc4, 0x30,
+	0x10, 0x86, 0x89, 0x4b, 0x17, 0x1d, 0x3d, 0x68, 0x10, 0xe9, 0xb1, 0xe4, 0x54, 0x15, 0xbc, 0xf8,
+	0x0b, 0x56, 0x7b, 0xec, 0x41, 0xb3, 0x5e, 0x3c, 0x66, 0x97, 0xb0, 0x06, 0xda, 0x24, 0x24, 0x53,
+	0x76, 0xfd, 0xf7, 0x92, 0x0f, 0xa8, 0x5d, 0x28, 0xbd, 0xcd, 0x1b, 0x1e, 0x9e, 0x4c, 0xde, 0xc0,
+	0x35, 0x9e, 0x7a, 0x7f, 0x78, 0xb1, 0xce, 0xa0, 0x61, 0x8f, 0x70, 0xd7, 0x36, 0xef, 0x4e, 0x0a,
+	0x94, 0x9b, 0xfd, 0xde, 0x0c, 0x1a, 0xbf, 0x4e, 0xf4, 0x1e, 0x0a, 0x73, 0xd4, 0xd2, 0x95, 0xa4,
+	0x22, 0xf5, 0x15, 0x4f, 0x81, 0x31, 0x80, 0xb6, 0xd9, 0x58, 0xbb, 0x45, 0x81, 0x32, 0x30, 0x3e,
+	0x0c, 0x91, 0xb9, 0xe1, 0x29, 0xb0, 0x27, 0xa0, 0x6d, 0x13, 0x81, 0xcf, 0x41, 0xba, 0xdf, 0x0f,
+	0xe1, 0x44, 0xef, 0x67, 0x7c, 0x67, 0x2c, 0x97, 0x7e, 0xe8, 0x70, 0xc6, 0xfb, 0x1d, 0xd6, 0xe4,
+	0xa6, 0xeb, 0x16, 0xb5, 0xf4, 0x01, 0xd6, 0x3b, 0x89, 0x6f, 0xea, 0x50, 0x5e, 0x54, 0xa4, 0xbe,
+	0xe4, 0x39, 0x85, 0x73, 0xd1, 0x87, 0x07, 0x96, 0xab, 0x8a, 0xd4, 0x05, 0xcf, 0x89, 0x6d, 0x27,
+	0xea, 0x71, 0x0b, 0x6b, 0x94, 0xc6, 0xa8, 0x2e, 0x78, 0x0a, 0xf4, 0x16, 0x56, 0x47, 0xa5, 0xb3,
+	0x37, 0x8c, 0xb3, 0xd2, 0x54, 0xeb, 0x8f, 0xb2, 0xcb, 0x35, 0x3c, 0x4f, 0xd0, 0x7c, 0xff, 0xe8,
+	0x25, 0xff, 0xbd, 0xbb, 0x75, 0xfc, 0xb5, 0xd7, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0xc6, 0x4f,
+	0x47, 0x62, 0xc4, 0x01, 0x00, 0x00,
 }

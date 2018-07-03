@@ -5,8 +5,7 @@ message LDCreateAccountTx {
 }
 
 message LDAppState {
-	bytes address = 1;
-	bytes state = 2;
+	bytes state = 1;
 }
 
 message LDStateQueryParams {
@@ -17,20 +16,22 @@ message LDStateQueryResult {
 	bytes state = 1;
 }
 
-message LDRoll {
-	bytes player = 1;
-	int32 amount = 2;
+message LDRollQueryParams {
+	string owner = 1;
+	bool  betBig = 2;
+	int32 amount = 3;
 }
 
-message LDRollResult {
-    int32 result = 1;
-    int32 amount = 2;
+message LDRollQueryResult {
+    int32 point  = 1;
+    bool  win    = 2;
+    int32 amount = 3;
 }
 
-message LDAmountQueryParams {
-	bytes player = 1;
+message LDChipQueryParams {
+	string owner = 1;
 }
 
-message LDAmountQueryResult {
+message LDChipQueryResult {
 	int32 amount = 1;
 }
