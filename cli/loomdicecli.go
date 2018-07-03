@@ -22,6 +22,8 @@ func getPrivKey(privKeyFile string) ([]byte, error) {
 
 func main() {
 	var privFile, user string
+	var betBig bool
+	var betAmount int32
 	//var value int
 	//var value int
 
@@ -82,9 +84,65 @@ func main() {
 			return nil
 		},
 	}
-
 	getStateCmd.Flags().StringVarP(&privFile, "key", "k", "", "private key file")
 	getStateCmd.Flags().StringVarP(&user, "user", "u", "loom", "user")
+
+	rollCmd := &cobra.Command{
+		Use:   "roll",
+		Short: "roll the dice",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			var result txmsg.LDRollQueryResult
+			privKey, err := getPrivKey(privFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			params := &txmsg.LDRollQueryParams{
+				Owner:  user,
+				BetBig: betBig,
+				Amount: betAmount,
+			}
+			signer := auth.NewEd25519Signer(privKey)
+			if _, err := contract.Call("Roll", params, signer, &result); err != nil {
+				return err
+			}
+			fmt.Printf("Point: %v, Win: %v, New amount: %v\n", result.Point, result.Win, result.Amount)
+			return nil
+		},
+	}
+
+	rollCmd.Flags().StringVarP(&privFile, "key", "k", "", "private key file")
+	rollCmd.Flags().StringVarP(&user, "user", "u", "loom", "user")
+	rollCmd.Flags().BoolVarP(&betBig, "big", "b", false, "bet big or not")
+	rollCmd.Flags().Int32VarP(&betAmount, "amount", "a", 0, "bet amount")
+
+	getChipCmd := &cobra.Command{
+		Use:   "get-chip",
+		Short: "get chip amount",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			var result txmsg.LDChipQueryResult
+			privKey, err := getPrivKey(privFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			params := &txmsg.LDChipQueryParams{
+				Owner: user,
+			}
+			signer := auth.NewEd25519Signer(privKey)
+			callerAddr := loom.Address{
+				ChainID: rpcClient.GetChainID(),
+				Local:   loom.LocalAddressFromPublicKey(signer.PublicKey()),
+			}
+			if _, err := contract.StaticCall("GetChipCount", params, callerAddr, &result); err != nil {
+				return err
+			}
+			fmt.Println(string(result.Amount))
+			return nil
+		},
+	}
+	getChipCmd.Flags().StringVarP(&privFile, "key", "k", "", "private key file")
+	getChipCmd.Flags().StringVarP(&user, "user", "u", "loom", "user")
 
 	keygenCmd := &cobra.Command{
 		Use:   "genkey",
@@ -110,5 +168,7 @@ func main() {
 	rootCmd.AddCommand(keygenCmd)
 	rootCmd.AddCommand(createAccCmd)
 	rootCmd.AddCommand(getStateCmd)
+	rootCmd.AddCommand(rollCmd)
+	rootCmd.AddCommand(getChipCmd)
 	rootCmd.Execute()
 }
