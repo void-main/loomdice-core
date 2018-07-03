@@ -53,6 +53,8 @@ func (e *DiceContract) CreateAccount(ctx contract.Context, accTx *txmsg.LDCreate
 	addr := []byte(ctx.Message().Sender.Local)
 
 	initState, _ := json.Marshal(NewUserState())
+	ctx.Logger().Info("Owner: ", owner)
+	ctx.Logger().Info("Init state", initState)
 	state := txmsg.LDAppState{
 		Address: addr,
 		State:   initState,
@@ -71,11 +73,12 @@ func (e *DiceContract) CreateAccount(ctx contract.Context, accTx *txmsg.LDCreate
 	if err != nil {
 		log.Println("Error marshalling emit message")
 	}
-	ctx.EmitTopics(emitMsgJSON, "etherboy:createaccount")
+	ctx.EmitTopics(emitMsgJSON, "loomdice:createaccount")
 	return nil
 }
 
 func (e *DiceContract) GetState(ctx contract.StaticContext, params *txmsg.LDStateQueryParams) (*txmsg.LDStateQueryResult, error) {
+	ctx.Logger().Info("Get State Owner: ", params.Owner)
 	if ctx.Has(e.ownerKey(params.Owner)) {
 		var curState txmsg.LDAppState
 		if err := ctx.Get(e.ownerKey(params.Owner), &curState); err != nil {
