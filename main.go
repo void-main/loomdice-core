@@ -21,8 +21,8 @@ type UserState struct {
 	history   []int
 }
 
-func NewUserState() *UserState {
-	return &UserState{
+func NewUserState() UserState {
+	return UserState{
 		chipCount: 0,
 		winCount:  0,
 		loseCount: 0,
@@ -52,7 +52,10 @@ func (e *DiceContract) CreateAccount(ctx contract.Context, accTx *txmsg.LDCreate
 	}
 	addr := []byte(ctx.Message().Sender.Local)
 
-	initState, _ := json.Marshal(NewUserState())
+	initState, err := json.Marshal(NewUserState())
+	if err != nil {
+		return errors.Wrap(err, "Error marshalling state")
+	}
 	ctx.Logger().Info("Owner: ", owner)
 	ctx.Logger().Info("Init state", initState)
 	state := txmsg.LDAppState{
