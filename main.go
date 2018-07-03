@@ -32,7 +32,7 @@ func NewUserState() *UserState {
 
 func (c *DiceContract) Meta() (plugin.Meta, error) {
 	return plugin.Meta{
-		Name:    "DiceContract",
+		Name:    "loomdicecore",
 		Version: "1.0.0",
 	}, nil
 }
